@@ -5,6 +5,7 @@ import { GlassNavbar } from '../../components/layout/GlassNavbar';
 import { CreateUserModal } from './modals/CreateUserModal';
 import { EditUserModal } from './modals/EditUserModal';
 import { BlanqueoPasswordModal } from './modals/BlanqueoPasswordModal';
+import { InactiveUsersPanel } from './components/InactiveUsersPanel';
 import { useAuthStore } from '../../stores/authStore';
 import { userService } from '../../services/userService';
 import { Rol } from '../../types';
@@ -81,6 +82,7 @@ export function UsersPage() {
   const [editingUser, setEditingUser] = useState<Usuario | null>(null);
   const [blanqueoUser, setBlanqueoUser] = useState<Usuario | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [showInactive, setShowInactive] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,6 +105,9 @@ export function UsersPage() {
 
   const toggleExpand = (id: number) => setExpandedId((prev) => (prev === id ? null : id));
 
+  const visibleUsers = users.filter(u => u.activo !== false);
+  const inactiveUsers = users.filter(u => u.activo === false);
+
   return (
     <div className="cpq-layout">
       <Sidebar onSelectBoard={(id) => navigate(`/kanban/${id}`)} />
@@ -118,6 +123,15 @@ export function UsersPage() {
         >
           {isAdmin && (
             <button
+              className={`btn cpq-navbar-btn ${showInactive ? 'btn-gray-active' : ''}`}
+              onClick={() => setShowInactive(v => !v)}
+            >
+              <i className="bi bi-person-x-fill fs-5" />
+              <span>Inactivos{inactiveUsers.length > 0 ? ` (${inactiveUsers.length})` : ''}</span>
+            </button>
+          )}
+          {isAdmin && (
+            <button
               className="btn cpq-navbar-btn"
               onClick={() => setShowCreate(true)}
             >
@@ -127,7 +141,15 @@ export function UsersPage() {
           )}
         </GlassNavbar>
 
-        <div className="flex-grow-1 overflow-auto p-4">
+        <div className="flex-grow-1 d-flex flex-row overflow-hidden p-4 gap-3">
+          {showInactive && (
+            <InactiveUsersPanel
+              users={inactiveUsers}
+              onClose={() => setShowInactive(false)}
+              onEdit={(u) => setEditingUser(u)}
+            />
+          )}
+          <div className="flex-grow-1 overflow-auto">
           {loading ? (
             <div className="text-center py-5">
               <div className="spinner-border text-primary" role="status" />
@@ -146,18 +168,18 @@ export function UsersPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.length === 0 ? (
+                  {visibleUsers.length === 0 ? (
                     <tr>
                       <td colSpan={isAdmin ? 6 : 5} className="text-center text-muted py-5">
                         No hay usuarios registrados
                       </td>
                     </tr>
                   ) : (
-                    users.map((u, idx) => (
+                    visibleUsers.map((u, idx) => (
                       <>
                         <tr
                           key={u.id}
-                          style={{ cursor: 'pointer', opacity: u.activo === false ? 0.45 : 1, filter: u.activo === false ? 'grayscale(0.6)' : 'none' }}
+                          style={{ cursor: 'pointer' }}
                           onClick={() => toggleExpand(u.id)}
                         >
                           <td className="text-center text-muted ps-3" style={{ width: 32 }}>
@@ -233,6 +255,7 @@ export function UsersPage() {
             </button>
             .
           </p>
+          </div>
         </div>
       </div>
 

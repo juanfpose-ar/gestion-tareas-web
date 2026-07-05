@@ -234,3 +234,14 @@ body {
   color: #334155 !important;
 }
 
+.cpq-inactive-users-panel {
+  width: 300px;
+  min-width: 300px;
+  border-radius: 12px;
+  border: 1px solid var(--cpq-card-border);
+  padding: 16px;
+  background-color: var(--cpq-card-bg);
+  box-shadow: var(--cpq-card-shadow);
+  overflow-y: auto;
+}
+
