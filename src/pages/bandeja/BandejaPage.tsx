@@ -22,7 +22,7 @@ export function BandejaPage() {
   const [refreshing, setRefreshing] = useState(false);
 
   // Folder and Search Filter States
-  const [activeFolder, setActiveFolder] = useState<'conversaciones' | 'archivados'>('conversaciones');
+  const [activeFolder, setActiveFolder] = useState<'conversaciones' | 'destacadas' | 'archivados'>('conversaciones');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Reply Form States
@@ -88,6 +88,7 @@ export function BandejaPage() {
 
   // Folder count badges
   const unreadConversacionesCount = conversaciones.filter(c => !c.archivada && c.tieneNoLeidos).length;
+  const unreadDestacadasCount = conversaciones.filter(c => c.destacada && c.tieneNoLeidos).length;
   const unreadArchivedCount = conversaciones.filter(c => c.archivada && c.tieneNoLeidos).length;
 
   // Thread detail retriever
@@ -160,6 +161,30 @@ export function BandejaPage() {
     }
   };
 
+  // Mark as unread and go back to the list
+  const handleMarkUnread = async (id: number) => {
+    try {
+      await mensajeriaService.actualizarEstado(id, { leida: false });
+      setSelectedThreadId(null);
+      setSelectedThreadDetail(null);
+      fetchBandeja();
+    } catch (err) {
+      console.error('Error marking as unread:', err);
+    }
+  };
+
+  // Toggle star on a whole conversation
+  const handleToggleStarConversation = async (id: number, currentDestacada: boolean) => {
+    const nuevoValor = !currentDestacada;
+    setConversaciones(prev => prev.map(c => c.id === id ? { ...c, destacada: nuevoValor } : c));
+    try {
+      await mensajeriaService.actualizarEstado(id, { destacada: nuevoValor });
+    } catch (err) {
+      console.error('Error toggling star:', err);
+      setConversaciones(prev => prev.map(c => c.id === id ? { ...c, destacada: currentDestacada } : c));
+    }
+  };
+
   const resetComposeState = () => {
     setShowCompose(false);
     setComposeTo([]);
@@ -217,6 +242,19 @@ export function BandejaPage() {
       fetchBandeja();
     } catch (err) {
       console.error('Error bulk deleting:', err);
+    }
+  };
+
+  const handleBulkMarkUnread = async () => {
+    if (selectedConversacionIds.length === 0) return;
+    try {
+      await Promise.all(
+        selectedConversacionIds.map(id => mensajeriaService.actualizarEstado(id, { leida: false }))
+      );
+      setSelectedConversacionIds([]);
+      fetchBandeja();
+    } catch (err) {
+      console.error('Error bulk marking as unread:', err);
     }
   };
 
@@ -317,6 +355,8 @@ export function BandejaPage() {
     // 1. Filter by active Folder
     if (activeFolder === 'conversaciones') {
       if (c.archivada) return false;
+    } else if (activeFolder === 'destacadas') {
+      if (!c.destacada) return false;
     } else if (activeFolder === 'archivados') {
       if (!c.archivada) return false;
     }
@@ -417,6 +457,24 @@ export function BandejaPage() {
               </button>
 
               <button
+                className={`mail-nav-item border-0 text-start bg-transparent ${activeFolder === 'destacadas' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveFolder('destacadas');
+                  setSelectedThreadId(null);
+                  setSelectedThreadDetail(null);
+                  setSelectedConversacionIds([]);
+                }}
+                type="button"
+              >
+                <span className="d-flex align-items-center gap-2">
+                  <i className="bi bi-star-fill"></i> Destacadas
+                </span>
+                {unreadDestacadasCount > 0 && (
+                  <span className="mail-nav-badge">{unreadDestacadasCount}</span>
+                )}
+              </button>
+
+              <button
                 className={`mail-nav-item border-0 text-start bg-transparent ${activeFolder === 'archivados' ? 'active' : ''}`}
                 onClick={() => {
                   setActiveFolder('archivados');
@@ -498,6 +556,17 @@ export function BandejaPage() {
                       >
                         <i className="bi bi-trash fs-5"></i>
                         <span>Eliminar</span>
+                      </button>
+
+                      {/* Mark as Unread Button */}
+                      <button
+                        className="btn cpq-navbar-btn cpq-navbar-btn-plain"
+                        onClick={() => handleMarkUnread(selectedThreadId)}
+                        type="button"
+                        title="Marcar como no leído"
+                      >
+                        <i className="bi bi-envelope-fill fs-5"></i>
+                        <span>Marcar como no leído</span>
                       </button>
                     </>
                   )}
@@ -638,6 +707,13 @@ export function BandejaPage() {
                         >
                           <i className="bi bi-trash"></i>
                         </button>
+                        <button
+                          className="mail-toolbar-btn"
+                          onClick={handleBulkMarkUnread}
+                          title="Marcar como no leído"
+                        >
+                          <i className="bi bi-envelope-fill"></i>
+                        </button>
                         <span className="text-muted small ms-1">{selectedConversacionIds.length} seleccionada(s)</span>
                       </div>
                     )}
@@ -656,6 +732,7 @@ export function BandejaPage() {
                       <h5 className="fw-semibold">No hay conversaciones</h5>
                       <p className="small text-center text-muted" style={{ maxWidth: 320 }}>
                         {activeFolder === 'conversaciones' && 'Tu bandeja de conversaciones está limpia.'}
+                        {activeFolder === 'destacadas' && 'No tienes conversaciones destacadas.'}
                         {activeFolder === 'archivados' && 'No tienes conversaciones archivadas.'}
                       </p>
                     </div>
@@ -680,6 +757,16 @@ export function BandejaPage() {
                                 style={{ cursor: 'pointer' }}
                               />
                             </div>
+
+                            {/* Star */}
+                            <button
+                              type="button"
+                              className="btn btn-sm p-0 border-0 bg-transparent mail-star-btn me-2"
+                              onClick={(e) => { e.stopPropagation(); handleToggleStarConversation(c.id, c.destacada); }}
+                              title={c.destacada ? 'Quitar destacado' : 'Destacar conversación'}
+                            >
+                              <i className={`bi ${c.destacada ? 'bi-star-fill text-warning' : 'bi-star text-muted'}`}></i>
+                            </button>
 
                             {/* Participants Name */}
                             <div className="mail-item-sender text-start text-truncate me-3 ms-2" title={c.nombresParticipantes} style={{ width: '180px' }}>

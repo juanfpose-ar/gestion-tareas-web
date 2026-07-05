@@ -206,6 +206,7 @@ export interface ConversacionResumen {
   fechaUltimaActividad: string;
   archivada: boolean;
   nombresParticipantes: string;
+  destacada: boolean;
 }
 
 export interface Mensaje {
@@ -237,6 +238,8 @@ export interface ResponderConversacionRequest {
 export interface ActualizarEstadoRequest {
   archivada?: boolean;
   eliminada?: boolean;
+  leida?: boolean;
+  destacada?: boolean;
 }
 
 export interface Reunion {

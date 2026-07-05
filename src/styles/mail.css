@@ -296,6 +296,15 @@
   flex-shrink: 0;
 }
 
+.mail-star-btn {
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.12s ease;
+}
+.mail-star-btn:hover {
+  transform: scale(1.2);
+}
+
 .mail-message-bubble {
   display: inline-flex;
   align-items: baseline;
