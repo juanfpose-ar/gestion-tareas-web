@@ -1,0 +1,121 @@
+/* =====================================================================
+   GestorTareas — Design Tokens (Light & Dark Theme Variables)
+   ===================================================================== */
+
+:root {
+  /* Paleta cromática corporativa Cala */
+  --cpq-sidebar-bg: #22252a;
+  --cpq-sidebar-hover: #2d3138;
+  --cpq-sidebar-active: #e91e63;
+  --cpq-sidebar-text: #adb5bd;
+  --cpq-sidebar-text-active: #ffffff;
+
+  --cpq-primary: #333e50;
+  --cpq-accent-pink: #e91e63;
+  --cpq-accent-pink-hover: #d81b60;
+  --cpq-accent-green: #28a745;
+  --cpq-accent-green-hover: #218838;
+
+  --cpq-bg-gray: #eef2f5;
+  --cpq-card-bg: #ffffff;
+  --cpq-card-border-radius: 8px;
+
+  --cpq-text-muted: #8892a0;
+  --cpq-border-color: #dee2e6;
+
+  --cpq-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Nuevas variables unificadas para el Design System */
+  --cpq-text-primary: #333333;
+  --cpq-text-secondary: #6c757d;
+  --cpq-text-title: #1e293b;
+  
+  --cpq-card-border: rgba(0, 0, 0, 0.05);
+  --cpq-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+
+  --cpq-scrollbar-track: #e9ecef;
+  --cpq-scrollbar-thumb: #adb5bd;
+  --cpq-scrollbar-thumb-hover: #6c757d;
+
+  --cpq-hover-bg: #f1f5f9;
+  --cpq-selected-bg: rgba(51, 62, 80, 0.06);
+  --cpq-unread-bg: rgba(233, 30, 99, 0.03);
+
+  --cpq-mail-sidebar-bg: #f8f9fa;
+  --cpq-mail-messages-bg: #f8fafc;
+  --cpq-mail-footer-bg: #f8fafc;
+  --cpq-mail-nav-hover-bg: #e2e8f0;
+
+  /* Glassmorphism y Navbar variables */
+  --cpq-glass-bg: rgba(255, 255, 255, 0.85);
+  --cpq-glass-bg-with-bg: rgba(255, 255, 255, 0.42);
+  --cpq-glass-border: rgba(255, 255, 255, 0.5);
+  --cpq-glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+  --cpq-navbar-btn-bg: rgba(255, 255, 255, 0.45);
+  --cpq-navbar-btn-border: rgba(255, 255, 255, 0.6);
+  --cpq-navbar-btn-text: #1e293b;
+
+  /* Paneles y Calendar variables */
+  --cpq-planner-bg: rgba(255, 255, 255, 0.95);
+  --cpq-closed-ver-bg: rgba(255, 255, 255, 0.97);
+  --cpq-closed-ver-border: #ede9fe;
+  --cpq-calendar-bg: rgba(255, 255, 255, 0.75);
+  --cpq-calendar-grid-bg: #f8fafc;
+  --cpq-calendar-cell-bg: #ffffff;
+  --cpq-calendar-today-bg: #eff6ff;
+  --cpq-calendar-cell-empty-bg: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] {
+  --cpq-sidebar-bg: #0f172a;
+  --cpq-sidebar-hover: #1e293b;
+  --cpq-sidebar-active: #f43f5e;
+  --cpq-sidebar-text: #94a3b8;
+  --cpq-sidebar-text-active: #ffffff;
+
+  --cpq-primary: #f8fafc;
+  --cpq-accent-pink: #f43f5e;
+  --cpq-accent-pink-hover: #e11d48;
+  --cpq-accent-green: #22c55e;
+  --cpq-accent-green-hover: #16a34a;
+
+  --cpq-bg-gray: #0b0f19;
+  --cpq-card-bg: #1e293b;
+  --cpq-text-primary: #f8fafc;
+  --cpq-text-secondary: #94a3b8;
+  --cpq-text-title: #f1f5f9;
+
+  --cpq-border-color: #334155;
+  --cpq-card-border: rgba(255, 255, 255, 0.08);
+  --cpq-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  --cpq-scrollbar-track: #1e293b;
+  --cpq-scrollbar-thumb: #475569;
+  --cpq-scrollbar-thumb-hover: #64748b;
+
+  --cpq-hover-bg: #334155;
+  --cpq-selected-bg: rgba(255, 255, 255, 0.08);
+  --cpq-unread-bg: rgba(244, 63, 94, 0.05);
+
+  --cpq-mail-sidebar-bg: #1e293b;
+  --cpq-mail-messages-bg: #0f172a;
+  --cpq-mail-footer-bg: #0f172a;
+  --cpq-mail-nav-hover-bg: #334155;
+
+  --cpq-glass-bg: rgba(30, 41, 59, 0.85);
+  --cpq-glass-bg-with-bg: rgba(30, 41, 59, 0.42);
+  --cpq-glass-border: rgba(255, 255, 255, 0.1);
+  --cpq-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --cpq-navbar-btn-bg: rgba(255, 255, 255, 0.08);
+  --cpq-navbar-btn-border: rgba(255, 255, 255, 0.15);
+  --cpq-navbar-btn-text: #f8fafc;
+
+  --cpq-planner-bg: rgba(30, 41, 59, 0.95);
+  --cpq-closed-ver-bg: rgba(30, 41, 59, 0.97);
+  --cpq-closed-ver-border: #4c1d95;
+  --cpq-calendar-bg: rgba(30, 41, 59, 0.75);
+  --cpq-calendar-grid-bg: #0f172a;
+  --cpq-calendar-cell-bg: #1e293b;
+  --cpq-calendar-today-bg: #1e3a8a;
+  --cpq-calendar-cell-empty-bg: rgba(30, 41, 59, 0.5);
+}

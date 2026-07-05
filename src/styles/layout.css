@@ -1,0 +1,236 @@
+/* =====================================================================
+   GestorTareas — Core Layout, Sidebar & Shared Elements
+   ===================================================================== */
+
+body {
+  background-color: var(--cpq-bg-gray);
+  color: var(--cpq-text-primary);
+  font-family: var(--cpq-font-sans);
+  font-size: 0.9rem;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Layout y contenedores */
+.cpq-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.cpq-content {
+  flex-grow: 1;
+  background-color: var(--cpq-bg-gray);
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Sidebar Styling */
+.cpq-sidebar {
+  width: 250px;
+  min-width: 250px;
+  background-color: var(--cpq-sidebar-bg);
+  color: var(--cpq-sidebar-text);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  transition: width 0.22s ease, min-width 0.22s ease;
+  overflow: hidden;
+}
+
+.cpq-sidebar.collapsed {
+  width: 52px;
+  min-width: 52px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.18);
+}
+
+/* Etiquetas de texto que se ocultan al colapsar */
+.cpq-sidebar-label {
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  width: auto;
+}
+.cpq-sidebar.collapsed .cpq-sidebar-label {
+  opacity: 0;
+  width: 0;
+  pointer-events: none;
+}
+
+.cpq-sidebar .nav-link {
+  color: var(--cpq-sidebar-text);
+  font-size: 0.85rem;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0;
+  transition: background-color 0.2s, color 0.2s, padding 0.22s, justify-content 0.22s;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cpq-sidebar.collapsed .nav-link {
+  justify-content: center !important;
+  padding: 0.75rem 0 !important;
+  gap: 0 !important;
+}
+
+.cpq-sidebar.collapsed .cpq-sidebar-label {
+  display: none;
+}
+
+.cpq-sidebar .nav-link:hover {
+  background-color: var(--cpq-sidebar-hover);
+  color: #ffffff;
+}
+
+.cpq-sidebar .nav-link.active {
+  background-color: var(--cpq-sidebar-active);
+  color: var(--cpq-sidebar-text-active);
+  font-weight: 500;
+}
+
+.cpq-sidebar-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cpq-text-secondary);
+  padding: 1rem 1.25rem 0.5rem;
+  font-weight: 700;
+}
+
+/* Top Navbar / Breadcrumbs */
+.cpq-navbar {
+  padding: 0.5rem 0 1rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.cpq-breadcrumb {
+  font-size: 0.8rem;
+  color: var(--cpq-text-muted);
+  margin-bottom: 0;
+}
+
+.cpq-breadcrumb-item.active {
+  color: var(--cpq-primary);
+  font-weight: 500;
+}
+
+/* Tarjetas y Contenedores */
+.cpq-card {
+  background-color: var(--cpq-card-bg);
+  border-radius: var(--cpq-card-border-radius);
+  border: 1px solid var(--cpq-card-border);
+  box-shadow: var(--cpq-card-shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Botones estilo Cala */
+.btn-pink {
+  background-color: var(--cpq-accent-pink);
+  color: #ffffff;
+  border: none;
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background-color 0.2s;
+}
+.btn-pink:hover, .btn-pink:focus {
+  background-color: var(--cpq-accent-pink-hover);
+  color: #ffffff;
+}
+
+/* Badges de Prioridad */
+.badge-prioridad-BAJA { background-color: #e2e8f0; color: #475569; }
+.badge-prioridad-MEDIA { background-color: #e0f2fe; color: #0369a1; }
+.badge-prioridad-ALTA { background-color: #fef3c7; color: #b45309; }
+.badge-prioridad-URGENTE { background-color: #fee2e2; color: #b91c1c; }
+
+/* Markdown render en descripción del ticket */
+.cpq-markdown { color: var(--cpq-text-primary); }
+.cpq-markdown h1, .cpq-markdown h2, .cpq-markdown h3,
+.cpq-markdown h4, .cpq-markdown h5, .cpq-markdown h6 {
+  font-weight: 700; margin-top: 0.75em; margin-bottom: 0.25em; color: var(--cpq-text-title);
+}
+.cpq-markdown h1 { font-size: 1.3rem; }
+.cpq-markdown h2 { font-size: 1.15rem; }
+.cpq-markdown h3 { font-size: 1rem; }
+.cpq-markdown p { margin-bottom: 0.5em; }
+.cpq-markdown strong { font-weight: 700; color: var(--cpq-text-title); }
+.cpq-markdown em { font-style: italic; }
+.cpq-markdown s { text-decoration: line-through; color: var(--cpq-text-muted); }
+.cpq-markdown code {
+  background: var(--cpq-hover-bg); border: 1px solid var(--cpq-border-color);
+  border-radius: 4px; padding: 1px 6px; font-size: 0.82em;
+  font-family: 'Courier New', monospace; color: var(--cpq-accent-pink);
+}
+.cpq-markdown pre {
+  background: var(--cpq-text-title); border-radius: 8px; padding: 1rem;
+  overflow-x: auto; margin: 0.5em 0;
+}
+.cpq-markdown pre code {
+  background: none; border: none; color: #e2e8f0;
+  font-size: 0.85em; padding: 0;
+}
+.cpq-markdown ul, .cpq-markdown ol { padding-left: 1.5rem; margin-bottom: 0.5em; }
+.cpq-markdown li { margin-bottom: 0.15em; }
+.cpq-markdown blockquote {
+  border-left: 3px solid var(--cpq-accent-pink); margin: 0.5em 0;
+  padding: 0.25rem 0.75rem; background: var(--cpq-unread-bg); color: var(--cpq-text-secondary);
+}
+.cpq-markdown a { color: #3b82f6; text-decoration: underline; }
+.cpq-markdown hr { border: none; border-top: 1px solid var(--cpq-border-color); margin: 0.75em 0; }
+
+/* Unified Navbar Button Styles */
+.cpq-navbar-btn {
+  background-color: var(--cpq-navbar-btn-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--cpq-navbar-btn-border);
+  color: var(--cpq-navbar-btn-text);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.cpq-navbar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  color: var(--cpq-navbar-btn-text) !important;
+  transform: translateY(-1px);
+}
+
+.btn-blue-active {
+  background-color: #e0f2fe !important;
+  border-color: #7dd3fc !important;
+  color: #0369a1 !important;
+}
+.btn-yellow-active {
+  background-color: #fef3c7 !important;
+  border-color: #fde047 !important;
+  color: #b45309 !important;
+}
+.btn-purple-active {
+  background-color: #ede9fe !important;
+  border-color: #c4b5fd !important;
+  color: #5b21b6 !important;
+}
+.btn-gray-active {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+

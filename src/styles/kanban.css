@@ -1,0 +1,172 @@
+/* =====================================================================
+   GestorTareas — Kanban Board, Calendars, Timelines & Glassmorphism
+   ===================================================================== */
+
+/* Kanban Board Horizon Scroll */
+.kanban-board {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 4px 2px 16px;
+  overflow-x: auto;
+  min-height: calc(100vh - 140px);
+}
+
+.kanban-board::-webkit-scrollbar {
+  height: 8px;
+}
+.kanban-board::-webkit-scrollbar-track {
+  background: var(--cpq-scrollbar-track);
+  border-radius: 4px;
+}
+.kanban-board::-webkit-scrollbar-thumb {
+  background: var(--cpq-scrollbar-thumb);
+  border-radius: 4px;
+}
+.kanban-board::-webkit-scrollbar-thumb:hover {
+  background: var(--cpq-scrollbar-thumb-hover);
+}
+
+/* Archived ticket items hover */
+.archived-ticket-item {
+  transition: all 0.2s ease-in-out;
+}
+.archived-ticket-item:hover {
+  background-color: var(--cpq-hover-bg) !important;
+  border-color: var(--cpq-border-color) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Bottom Navigation Bar Glassmorphism */
+.bottom-nav-container {
+  background-color: var(--cpq-glass-bg-with-bg) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--cpq-glass-border) !important;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.15), 0 0 30px rgba(0, 0, 0, 0.08);
+  padding: 4px !important;
+}
+.bottom-nav-btn {
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--cpq-navbar-btn-text) !important;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bottom-nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-1px);
+}
+.bottom-nav-btn.active {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Glassmorphism Styles for Top Navbar and Active Filters */
+.cpq-navbar-glass {
+  position: relative;
+  z-index: 100;
+  background-color: var(--cpq-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 16px;
+  border: 1px solid var(--cpq-glass-border);
+  box-shadow: var(--cpq-glass-shadow);
+}
+.cpq-navbar-glass.has-bg {
+  background-color: var(--cpq-glass-bg-with-bg);
+}
+
+.cpq-active-filters-bar {
+  position: relative;
+  z-index: 90;
+  background-color: var(--cpq-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 12px;
+  border: 1px solid var(--cpq-glass-border);
+  box-shadow: 0 4px 20px 0 rgba(31, 38, 135, 0.08);
+}
+.cpq-active-filters-bar.has-bg {
+  background-color: var(--cpq-glass-bg-with-bg);
+}
+
+/* Board background image */
+.cpq-content.has-board-bg {
+  position: relative;
+  z-index: 0;
+}
+.cpq-board-bg-blur {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+.cpq-board-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(rgba(15, 23, 42, 0.12), rgba(15, 23, 42, 0.22));
+  pointer-events: none;
+}
+
+/* Extracted Panel Styles */
+.cpq-planner-panel-style {
+  width: 400px;
+  min-width: 400px;
+  border-radius: 16px;
+  border: 1px solid var(--cpq-card-border);
+  padding: 16px;
+  background-color: var(--cpq-planner-bg);
+  backdrop-filter: blur(16px);
+  z-index: 10;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.cpq-closed-versions-panel {
+  width: 360px;
+  min-width: 360px;
+  border-radius: 16px;
+  border: 1px solid var(--cpq-closed-ver-border);
+  padding: 16px;
+  background-color: var(--cpq-closed-ver-bg);
+  backdrop-filter: blur(16px);
+  z-index: 10;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.cpq-archived-tickets-panel {
+  width: 380px;
+  min-width: 380px;
+  border-radius: 16px;
+  border: 1px solid var(--cpq-card-border);
+  padding: 16px;
+  background-color: var(--cpq-planner-bg);
+  backdrop-filter: blur(16px);
+  z-index: 10;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* Calendar Grid Styles */
+.cpq-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 1px solid var(--cpq-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--cpq-calendar-grid-bg);
+}
