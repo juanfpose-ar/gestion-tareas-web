@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { userService } from '../../services/userService';
 import { mensajeriaService } from '../../services/mensajeriaService';
+import { getContrastColor } from '../../utils/colorUtils';
 import type { ConversacionResumen, ConversacionDetalle, Usuario } from '../../types';
 
 export function BandejaPage() {
@@ -40,9 +41,6 @@ export function BandejaPage() {
 
   // Selected conversations for bulk actions
   const [selectedConversacionIds, setSelectedConversacionIds] = useState<number[]>([]);
-
-  // Expandable message states inside thread
-  const [expandedMessages, setExpandedMessages] = useState<{ [id: number]: boolean }>({});
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -98,12 +96,6 @@ export function BandejaPage() {
       const detail = await mensajeriaService.getConversacion(id);
       setSelectedThreadDetail(detail);
 
-      // Expand only the latest message by default
-      if (detail.mensajes && detail.mensajes.length > 0) {
-        const latestMsg = detail.mensajes[detail.mensajes.length - 1];
-        setExpandedMessages({ [latestMsg.id]: true });
-      }
-
       // Locally mark as read
       setConversaciones(prev => prev.map(c => c.id === id ? { ...c, tieneNoLeidos: false } : c));
     } catch (err) {
@@ -123,12 +115,6 @@ export function BandejaPage() {
       });
       setSelectedThreadDetail(updatedDetail);
       setReplyText('');
-
-      // Auto expand the new response
-      if (updatedDetail.mensajes && updatedDetail.mensajes.length > 0) {
-        const latestMsg = updatedDetail.mensajes[updatedDetail.mensajes.length - 1];
-        setExpandedMessages(prev => ({ ...prev, [latestMsg.id]: true }));
-      }
 
       // Update main conversations list
       fetchBandeja();
@@ -251,10 +237,6 @@ export function BandejaPage() {
     } finally {
       setSendingCompose(false);
     }
-  };
-
-  const toggleMessageExpansion = (msgId: number) => {
-    setExpandedMessages(prev => ({ ...prev, [msgId]: !prev[msgId] }));
   };
 
   // Recipient check box toggler
@@ -399,14 +381,15 @@ export function BandejaPage() {
         <div className="mail-container flex-grow-1 mx-3 mt-3 mb-3">
           {/* Sub-Sidebar */}
           <div className="mail-sidebar">
-            <button
-              onClick={() => setShowCompose(true)}
-              className="btn btn-danger mail-compose-btn w-100 d-flex align-items-center justify-content-start gap-3"
-              style={{ backgroundColor: 'var(--cpq-accent-pink)', border: 'none' }}
-              type="button"
-            >
-              <i className="bi bi-pencil-square fs-5"></i> Redactar
-            </button>
+            <div className="pe-3">
+              <button
+                onClick={() => setShowCompose(true)}
+                className="btn mail-compose-btn w-100 d-flex align-items-center justify-content-start gap-3"
+                type="button"
+              >
+                <i className="bi bi-pencil-square fs-5"></i> Redactar
+              </button>
+            </div>
 
             <div className="d-flex flex-column gap-1">
               <button
@@ -460,14 +443,14 @@ export function BandejaPage() {
                 {/* Detail Header / Actions bar */}
                 <div className="mail-detail-header">
                   <button
-                    className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
+                    className="btn cpq-navbar-btn cpq-navbar-btn-plain"
                     onClick={() => {
                       setSelectedThreadId(null);
                       setSelectedThreadDetail(null);
                     }}
                     type="button"
                   >
-                    <i className="bi bi-arrow-left"></i> Volver
+                    <i className="bi bi-arrow-left fs-5"></i> Volver
                   </button>
 
                   <div className="vr mx-1"></div>
@@ -476,23 +459,23 @@ export function BandejaPage() {
                     <>
                       {/* Archive Button */}
                       <button
-                        className="btn btn-light btn-sm d-flex align-items-center gap-1 text-muted"
+                        className="btn cpq-navbar-btn cpq-navbar-btn-plain"
                         onClick={() => {
                           const item = conversaciones.find(c => c.id === selectedThreadId);
                           if (item) handleToggleArchive(selectedThreadId, item.archivada);
                         }}
                         type="button"
                         title={
-                          conversaciones.find(c => c.id === selectedThreadId)?.archivada 
-                            ? 'Mover a Recibidos' 
+                          conversaciones.find(c => c.id === selectedThreadId)?.archivada
+                            ? 'Mover a Recibidos'
                             : 'Archivar'
                         }
                       >
-                        <i className={
+                        <i className={`fs-5 ${
                           conversaciones.find(c => c.id === selectedThreadId)?.archivada
                             ? 'bi bi-inbox'
                             : 'bi bi-archive'
-                        }></i>
+                        }`}></i>
                         <span>
                           {conversaciones.find(c => c.id === selectedThreadId)?.archivada
                             ? 'Mover a Recibidos'
@@ -502,12 +485,12 @@ export function BandejaPage() {
 
                       {/* Delete Button */}
                       <button
-                        className="btn btn-light btn-sm d-flex align-items-center gap-1 text-danger-hover text-muted"
+                        className="btn cpq-navbar-btn cpq-navbar-btn-plain"
                         onClick={() => handleDeleteThread(selectedThreadId)}
                         type="button"
                         title="Eliminar conversación"
                       >
-                        <i className="bi bi-trash"></i>
+                        <i className="bi bi-trash fs-5"></i>
                         <span>Eliminar</span>
                       </button>
                     </>
@@ -523,52 +506,53 @@ export function BandejaPage() {
                 ) : (
                   <>
                     <div className="mail-detail-messages">
-                      <div className="mb-2 text-start">
-                        <h4 className="mail-detail-subject">{selectedThreadDetail.asunto}</h4>
+                      <div className="mb-2 d-flex align-items-center justify-content-between">
+                        <h4 className="mail-detail-subject text-start mb-0">{selectedThreadDetail.asunto}</h4>
+                        <div className="d-flex align-items-center">
+                          {selectedThreadDetail.participanteIds.map((pid, idx) => {
+                            const u = users.find((usr) => usr.id === pid);
+                            if (!u) return null;
+                            const color = u.colorAvatar ?? '#0d6efd';
+                            const label = u.nombreCompleto || u.username;
+                            return (
+                              <div
+                                key={pid}
+                                className="mail-item-avatar flex-shrink-0"
+                                style={{
+                                  backgroundColor: color,
+                                  color: getContrastColor(color),
+                                  marginLeft: idx === 0 ? 0 : '-8px',
+                                  border: '2px solid var(--cpq-card-bg)',
+                                }}
+                                title={label}
+                              >
+                                {label.substring(0, 1).toUpperCase()}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
 
                       {selectedThreadDetail.mensajes.map((msg) => {
-                        const isExpanded = expandedMessages[msg.id] || false;
-
+                        const isMine = msg.emisorId === currentUser?.id;
                         return (
                           <div key={msg.id} className="mail-message-card">
-                            {/* Message Header (Toggles collapse) */}
-                            <div
-                              className="mail-message-header"
-                              onClick={() => toggleMessageExpansion(msg.id)}
-                            >
-                              <div className="d-flex align-items-center gap-3">
+                            <div className={`mail-message-row ${isMine ? 'mail-message-mine' : ''}`}>
+                              <div className="mail-message-meta">
                                 <div
-                                  className="mail-item-avatar"
-                                  style={{
-                                    backgroundColor: 
-                                      msg.emisorId === currentUser?.id ? 'var(--cpq-primary)' : 'var(--cpq-accent-pink)'
-                                  }}
+                                  className="mail-item-avatar flex-shrink-0"
+                                  style={{ backgroundColor: isMine ? 'var(--cpq-primary)' : 'var(--cpq-accent-pink)' }}
                                 >
                                   {msg.emisorNombre.substring(0, 1).toUpperCase()}
                                 </div>
-                                <div className="text-start">
-                                  <span className="fw-semibold text-dark">{msg.emisorNombre}</span>
-                                  {!isExpanded && (
-                                    <span className="text-muted ms-2 small d-none d-sm-inline">
-                                      - {msg.contenido.length > 80 ? msg.contenido.substring(0, 77) + '...' : msg.contenido}
-                                    </span>
-                                  )}
-                                </div>
+                                <span className="fw-semibold text-dark">{msg.emisorNombre}</span>
                               </div>
 
-                              <div className="d-flex align-items-center gap-2">
-                                <span className="small text-muted">{formatMailDate(msg.fechaEnvio)}</span>
-                                <i className={`bi bi-chevron-${isExpanded ? 'up' : 'down'} text-muted`}></i>
+                              <div className={`mail-message-bubble ${isMine ? 'mail-message-mine-bubble' : 'mail-message-theirs-bubble'}`}>
+                                <span className="small text-muted flex-shrink-0">{formatMailDate(msg.fechaEnvio)}</span>
+                                <span className="mail-message-content text-start">{msg.contenido}</span>
                               </div>
                             </div>
-
-                            {/* Message Body (Render if expanded) */}
-                            {isExpanded && (
-                              <div className="mail-message-body text-start">
-                                {msg.contenido}
-                              </div>
-                            )}
                           </div>
                         );
                       })}
@@ -592,14 +576,13 @@ export function BandejaPage() {
                         <div className="text-end">
                           <button
                             type="submit"
-                            className="btn btn-primary btn-sm px-4 d-inline-flex align-items-center gap-1"
-                            style={{ backgroundColor: 'var(--cpq-primary)', border: 'none' }}
+                            className="btn cpq-navbar-btn cpq-navbar-btn-plain"
                             disabled={submittingReply || !replyText.trim()}
                           >
                             {submittingReply ? (
-                              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             ) : (
-                              <i className="bi bi-send"></i>
+                              <i className="bi bi-send fs-5"></i>
                             )}
                             Enviar respuesta
                           </button>
@@ -669,10 +652,6 @@ export function BandejaPage() {
                     /* LIST OF CONVERSATIONS SCREEN */
                     <div className="mail-list-container">
                       {filteredConversaciones.map((c) => {
-                        const initials = c.nombresParticipantes 
-                          ? c.nombresParticipantes.substring(0, 1).toUpperCase()
-                          : '?';
-
                         return (
                           <div
                             key={c.id}
@@ -691,19 +670,8 @@ export function BandejaPage() {
                               />
                             </div>
 
-                            {/* Avatar */}
-                            <div
-                              className="mail-item-avatar me-3"
-                              style={{
-                                backgroundColor: 
-                                  c.ultimoEmisorId === currentUser?.id ? 'var(--cpq-primary)' : 'var(--cpq-accent-pink)'
-                              }}
-                            >
-                              {initials}
-                            </div>
-
                             {/* Participants Name */}
-                            <div className="mail-item-sender text-start text-truncate me-3" title={c.nombresParticipantes} style={{ width: '180px' }}>
+                            <div className="mail-item-sender text-start text-truncate me-3 ms-2" title={c.nombresParticipantes} style={{ width: '180px' }}>
                               {c.nombresParticipantes}
                             </div>
 

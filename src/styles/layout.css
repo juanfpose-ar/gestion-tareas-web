@@ -221,6 +221,15 @@ body {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
+/* Same look as .cpq-navbar-btn but for plain white/card backgrounds outside the glass navbar */
+:root:not([data-theme="dark"]) .cpq-navbar-btn-plain {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+:root:not([data-theme="dark"]) .cpq-navbar-btn-plain:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
 .btn-blue-active {
   background-color: #e0f2fe !important;
   border-color: #7dd3fc !important;
