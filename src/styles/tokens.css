@@ -45,6 +45,8 @@
   --cpq-mail-messages-bg: #f8fafc;
   --cpq-mail-footer-bg: #f8fafc;
   --cpq-mail-nav-hover-bg: #e2e8f0;
+  --cpq-mail-read-bg: #f2f4f7;
+  --cpq-mail-search-bg: #eef1f4;
 
   /* Glassmorphism y Navbar variables */
   --cpq-glass-bg: rgba(255, 255, 255, 0.85);
@@ -101,6 +103,8 @@
   --cpq-mail-messages-bg: #0f172a;
   --cpq-mail-footer-bg: #0f172a;
   --cpq-mail-nav-hover-bg: #334155;
+  --cpq-mail-read-bg: #16202f;
+  --cpq-mail-search-bg: #263449;
 
   --cpq-glass-bg: rgba(30, 41, 59, 0.85);
   --cpq-glass-bg-with-bg: rgba(30, 41, 59, 0.42);

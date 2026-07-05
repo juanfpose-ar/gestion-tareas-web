@@ -362,15 +362,15 @@ export function BandejaPage() {
           }
         >
           {/* Search Input */}
-          <div className="position-relative" style={{ width: '300px' }}>
+          <div className="position-relative" style={{ width: '380px' }}>
             <input
               type="text"
-              className="form-control form-control-sm ps-4"
+              className="form-control form-control-sm mail-search-input ps-5"
               placeholder="Buscar en el correo..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted small"></i>
+            <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted small"></i>
             {searchQuery && (
               <button
                 className="btn btn-link btn-sm position-absolute top-50 end-0 translate-middle-y text-muted me-1 p-0"
@@ -396,16 +396,16 @@ export function BandejaPage() {
         </GlassNavbar>
 
         {/* Mail Area split in Sub-Sidebar and Content */}
-        <div className="mail-container flex-grow-1">
+        <div className="mail-container flex-grow-1 mx-3 mt-3 mb-3">
           {/* Sub-Sidebar */}
           <div className="mail-sidebar">
             <button
               onClick={() => setShowCompose(true)}
-              className="btn btn-danger w-100 py-2 d-flex align-items-center justify-content-center gap-2 shadow-sm fw-semibold"
+              className="btn btn-danger mail-compose-btn w-100 d-flex align-items-center justify-content-start gap-3"
               style={{ backgroundColor: 'var(--cpq-accent-pink)', border: 'none' }}
               type="button"
             >
-              <i className="bi bi-pencil-square"></i> Redactar
+              <i className="bi bi-pencil-square fs-5"></i> Redactar
             </button>
 
             <div className="d-flex flex-column gap-1">
@@ -613,7 +613,7 @@ export function BandejaPage() {
               /* LIST VIEW SCREEN WITH BATCH ACTIONS HEADER */
               <div className="d-flex flex-column h-100">
                 {/* List Header Actions */}
-                <div className="mail-list-header d-flex align-items-center justify-content-between p-2 border-bottom bg-light flex-shrink-0">
+                <div className="mail-list-header d-flex align-items-center justify-content-between p-2 flex-shrink-0">
                   <div className="d-flex align-items-center gap-3">
                     {/* Master Checkbox */}
                     <div className="form-check m-0 ms-2">
@@ -629,23 +629,22 @@ export function BandejaPage() {
                     
                     {/* Bulk action buttons */}
                     {selectedConversacionIds.length > 0 && (
-                      <div className="d-flex align-items-center gap-2">
+                      <div className="d-flex align-items-center gap-1">
                         <button
-                          className="btn btn-light btn-sm d-flex align-items-center gap-1 border shadow-sm"
+                          className="mail-toolbar-btn"
                           onClick={handleBulkArchive}
                           title={activeFolder === 'archivados' ? 'Desarchivar seleccionados' : 'Archivar seleccionados'}
                         >
                           <i className="bi bi-archive"></i>
-                          <span className="small">{activeFolder === 'archivados' ? 'Desarchivar' : 'Archivar'} ({selectedConversacionIds.length})</span>
                         </button>
                         <button
-                          className="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 shadow-sm"
+                          className="mail-toolbar-btn"
                           onClick={handleBulkDelete}
                           title="Eliminar seleccionados"
                         >
                           <i className="bi bi-trash"></i>
-                          <span className="small">Eliminar</span>
                         </button>
+                        <span className="text-muted small ms-1">{selectedConversacionIds.length} seleccionada(s)</span>
                       </div>
                     )}
                   </div>
@@ -704,13 +703,13 @@ export function BandejaPage() {
                             </div>
 
                             {/* Participants Name */}
-                            <div className="mail-item-sender text-start fw-semibold text-truncate me-3" title={c.nombresParticipantes} style={{ width: '180px' }}>
+                            <div className="mail-item-sender text-start text-truncate me-3" title={c.nombresParticipantes} style={{ width: '180px' }}>
                               {c.nombresParticipantes}
                             </div>
 
                             {/* Content details */}
                             <div className="mail-item-body text-start">
-                              <span className="mail-item-subject text-dark me-2 fw-semibold">
+                              <span className="mail-item-subject text-dark me-2">
                                 {c.asunto}
                               </span>
                               <span className="mail-item-snippet text-muted">
@@ -718,9 +717,27 @@ export function BandejaPage() {
                               </span>
                             </div>
 
-                            {/* Date */}
-                            <div className="mail-item-date me-3">
-                              {formatMailDate(c.fechaUltimaActividad)}
+                            {/* Date / quick actions (swap on hover) */}
+                            <div className="mail-item-date-actions">
+                              <span className="mail-item-date">
+                                {formatMailDate(c.fechaUltimaActividad)}
+                              </span>
+                              <div className="mail-item-actions">
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleToggleArchive(c.id, c.archivada); }}
+                                  title={c.archivada ? 'Mover a Recibidos' : 'Archivar'}
+                                  type="button"
+                                >
+                                  <i className={`bi ${c.archivada ? 'bi-inbox' : 'bi-archive'}`}></i>
+                                </button>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleDeleteThread(c.id); }}
+                                  title="Eliminar"
+                                  type="button"
+                                >
+                                  <i className="bi bi-trash"></i>
+                                </button>
+                              </div>
                             </div>
                           </div>
                         );
