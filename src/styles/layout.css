@@ -91,9 +91,9 @@ body {
 }
 
 .cpq-sidebar .nav-link.active {
-  background-color: var(--cpq-sidebar-active);
-  color: var(--cpq-sidebar-text-active);
-  font-weight: 500;
+  background-color: transparent;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .cpq-sidebar-section-title {
@@ -211,6 +211,14 @@ body {
   background-color: rgba(255, 255, 255, 0.35) !important;
   color: var(--cpq-navbar-btn-text) !important;
   transform: translateY(-1px);
+}
+
+:root:not([data-theme="dark"]) .cpq-navbar-glass:not(.has-bg) .cpq-navbar-btn {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+:root:not([data-theme="dark"]) .cpq-navbar-glass:not(.has-bg) .cpq-navbar-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .btn-blue-active {

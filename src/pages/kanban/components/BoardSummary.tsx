@@ -348,12 +348,12 @@ export const BoardSummary: React.FC<Props> = ({ tickets, estados, etiquetas, onO
       {/* ── Status donut + Recent activity ── */}
       <div className="row g-3 mb-3">
         <div className="col-md-5">
-          <div style={card}>
+          <div style={{ ...card, height: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={sectionTitle}><i className="bi bi-pie-chart me-2" />Resumen de Estado</div>
             {total === 0 ? (
-              <p className="text-muted fst-italic small mb-0">Sin tickets en el tablero.</p>
+              <p className="text-muted fst-italic small mb-0 flex-grow-1 d-flex align-items-center">Sin tickets en el tablero.</p>
             ) : (
-              <div className="d-flex align-items-center gap-3">
+              <div className="d-flex align-items-center gap-3 flex-grow-1">
                 <svg viewBox="0 0 200 200" width={160} height={160} style={{ flexShrink: 0 }}>
                   {donutSegs.map((s, i) => (
                     <circle

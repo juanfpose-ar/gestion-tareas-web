@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Ticket } from '../types';
 
 export type ModalType =
@@ -26,26 +27,37 @@ interface UiState {
   setSidebarCollapsed: (v: boolean) => void;
 }
 
-export const useUiStore = create<UiState>()((set) => ({
-  activeModal: null,
-  selectedTicket: null,
-  initialTicketEstadoId: null,
-  selectedEstadoNombre: null,
-  tablerosExpanded: true,
-  sidebarCollapsed: false,
+export const useUiStore = create<UiState>()(
+  persist(
+    (set) => ({
+      activeModal: null,
+      selectedTicket: null,
+      initialTicketEstadoId: null,
+      selectedEstadoNombre: null,
+      tablerosExpanded: true,
+      sidebarCollapsed: false,
 
-  openModal: (modal, opts) =>
-    set({
-      activeModal: modal,
-      selectedTicket: opts?.ticket ?? null,
-      initialTicketEstadoId: opts?.estadoId ?? null,
-      selectedEstadoNombre: opts?.estadoNombre ?? null,
+      openModal: (modal, opts) =>
+        set({
+          activeModal: modal,
+          selectedTicket: opts?.ticket ?? null,
+          initialTicketEstadoId: opts?.estadoId ?? null,
+          selectedEstadoNombre: opts?.estadoNombre ?? null,
+        }),
+
+      closeModal: () =>
+        set({ activeModal: null, selectedTicket: null, initialTicketEstadoId: null, selectedEstadoNombre: null }),
+
+      setSelectedTicket: (ticket) => set({ selectedTicket: ticket }),
+      setTablerosExpanded: (v) => set({ tablerosExpanded: v }),
+      setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
     }),
-
-  closeModal: () =>
-    set({ activeModal: null, selectedTicket: null, initialTicketEstadoId: null, selectedEstadoNombre: null }),
-
-  setSelectedTicket: (ticket) => set({ selectedTicket: ticket }),
-  setTablerosExpanded: (v) => set({ tablerosExpanded: v }),
-  setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
-}));
+    {
+      name: 'gt-ui-prefs',
+      partialize: (state) => ({
+        tablerosExpanded: state.tablerosExpanded,
+        sidebarCollapsed: state.sidebarCollapsed,
+      }),
+    }
+  )
+);

@@ -468,14 +468,14 @@ export const BoardNavbar: React.FC<Props> = ({
                 className={`btn cpq-navbar-btn ${summaryMode === 'team' ? 'btn-blue-active' : ''}`}
                 onClick={() => onChangeSummaryMode('team')}
               >
-                <i className="bi bi-people-fill" />
+                <i className="bi bi-people-fill fs-5" />
                 <span>Equipo</span>
               </button>
               <button
                 className={`btn cpq-navbar-btn ${summaryMode === 'mine' ? 'btn-blue-active' : ''}`}
                 onClick={() => onChangeSummaryMode('mine')}
               >
-                <i className="bi bi-person-fill" />
+                <i className="bi bi-person-fill fs-5" />
                 <span>Mis tareas</span>
               </button>
             </>
