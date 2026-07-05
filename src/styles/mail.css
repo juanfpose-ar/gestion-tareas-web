@@ -24,19 +24,18 @@
 }
 
 .mail-compose-btn {
-  border-radius: 24px !important;
-  padding: 0.85rem 1rem !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
   font-weight: 600 !important;
-  font-size: 0.95rem !important;
+  font-size: 0.85rem !important;
   background-color: #dbeafe !important;
   border: 1px solid #93c5fd !important;
   color: #111827 !important;
-  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15) !important;
-  transition: box-shadow 0.15s ease, background-color 0.15s ease;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 .mail-compose-btn:hover {
   background-color: #bfdbfe !important;
-  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.25) !important;
+  transform: translateY(-1px);
 }
 
 .mail-content {
@@ -246,6 +245,16 @@
   flex-shrink: 0;
 }
 
+.mail-detail-subject-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--cpq-card-bg);
+  border-bottom: 1px solid var(--cpq-border-color);
+  flex-shrink: 0;
+}
+
 .mail-detail-messages {
   flex-grow: 1;
   overflow-y: auto;
@@ -307,7 +316,8 @@
 }
 
 .mail-message-theirs-bubble {
-  background-color: var(--cpq-mail-theirs-bg);
+  background-color: var(--cpq-card-bg);
+  border: 1px solid var(--cpq-border-color);
 }
 
 .mail-message-mine-bubble {

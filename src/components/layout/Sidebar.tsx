@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useBoardStore } from '../../stores/boardStore';
 import { useUiStore } from '../../stores/uiStore';
+import { useMensajeriaStore } from '../../stores/mensajeriaStore';
 import { Rol } from '../../types';
 
 interface SidebarProps {
@@ -14,6 +16,13 @@ export function Sidebar({ onSelectBoard }: SidebarProps) {
   const { user, logout } = useAuthStore();
   const { boards, activeBoardId } = useBoardStore();
   const { tablerosExpanded, setTablerosExpanded, sidebarCollapsed, setSidebarCollapsed } = useUiStore();
+  const { unreadCount, refreshUnreadCount } = useMensajeriaStore();
+
+  useEffect(() => {
+    refreshUnreadCount();
+    const interval = setInterval(refreshUnreadCount, 60000);
+    return () => clearInterval(interval);
+  }, [refreshUnreadCount]);
 
   const isActive = (path: string) => location.pathname.startsWith(path);
   const isAdmin = user?.rol === Rol.ADMIN;
@@ -104,6 +113,9 @@ export function Sidebar({ onSelectBoard }: SidebarProps) {
         >
           <i className="bi bi-envelope-fill flex-shrink-0"></i>
           <span className="cpq-sidebar-label"> Bandeja de entrada</span>
+          {!collapsed && unreadCount > 0 && (
+            <i className="bi bi-bell-fill ms-auto text-warning" title="Tenés mensajes sin leer"></i>
+          )}
         </button>
 
         {/* Usuarios (solo admin) */}

@@ -3,6 +3,7 @@ import { Sidebar } from '../../components/layout/Sidebar';
 import { GlassNavbar } from '../../components/layout/GlassNavbar';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
+import { useMensajeriaStore } from '../../stores/mensajeriaStore';
 import { userService } from '../../services/userService';
 import { mensajeriaService } from '../../services/mensajeriaService';
 import { getContrastColor } from '../../utils/colorUtils';
@@ -50,6 +51,7 @@ export function BandejaPage() {
     try {
       const data = await mensajeriaService.getBandeja();
       setConversaciones(data);
+      useMensajeriaStore.getState().setUnreadFromConversaciones(data);
     } catch (err) {
       console.error('Error fetching conversations:', err);
     } finally {
@@ -97,7 +99,11 @@ export function BandejaPage() {
       setSelectedThreadDetail(detail);
 
       // Locally mark as read
-      setConversaciones(prev => prev.map(c => c.id === id ? { ...c, tieneNoLeidos: false } : c));
+      setConversaciones(prev => {
+        const updated = prev.map(c => c.id === id ? { ...c, tieneNoLeidos: false } : c);
+        useMensajeriaStore.getState().setUnreadFromConversaciones(updated);
+        return updated;
+      });
     } catch (err) {
       console.error('Error fetching conversation detail:', err);
     }
@@ -505,36 +511,38 @@ export function BandejaPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="mail-detail-messages">
-                      <div className="mb-2 d-flex align-items-center justify-content-between">
-                        <h4 className="mail-detail-subject text-start mb-0">{selectedThreadDetail.asunto}</h4>
-                        <div className="d-flex align-items-center">
-                          {selectedThreadDetail.participanteIds.map((pid, idx) => {
-                            const u = users.find((usr) => usr.id === pid);
-                            if (!u) return null;
-                            const color = u.colorAvatar ?? '#0d6efd';
-                            const label = u.nombreCompleto || u.username;
-                            return (
-                              <div
-                                key={pid}
-                                className="mail-item-avatar flex-shrink-0"
-                                style={{
-                                  backgroundColor: color,
-                                  color: getContrastColor(color),
-                                  marginLeft: idx === 0 ? 0 : '-8px',
-                                  border: '2px solid var(--cpq-card-bg)',
-                                }}
-                                title={label}
-                              >
-                                {label.substring(0, 1).toUpperCase()}
-                              </div>
-                            );
-                          })}
-                        </div>
+                    <div className="mail-detail-subject-header">
+                      <h4 className="mail-detail-subject text-start mb-0">{selectedThreadDetail.asunto}</h4>
+                      <div className="d-flex align-items-center">
+                        {selectedThreadDetail.participanteIds.map((pid, idx) => {
+                          const u = users.find((usr) => usr.id === pid);
+                          if (!u) return null;
+                          const color = u.colorAvatar ?? '#0d6efd';
+                          const label = u.nombreCompleto || u.username;
+                          return (
+                            <div
+                              key={pid}
+                              className="mail-item-avatar flex-shrink-0"
+                              style={{
+                                backgroundColor: color,
+                                color: getContrastColor(color),
+                                marginLeft: idx === 0 ? 0 : '-8px',
+                                border: '2px solid var(--cpq-card-bg)',
+                              }}
+                              title={label}
+                            >
+                              {label.substring(0, 1).toUpperCase()}
+                            </div>
+                          );
+                        })}
                       </div>
+                    </div>
 
+                    <div className="mail-detail-messages">
                       {selectedThreadDetail.mensajes.map((msg) => {
                         const isMine = msg.emisorId === currentUser?.id;
+                        const dateSpan = <span className="small text-muted flex-shrink-0">{formatMailDate(msg.fechaEnvio)}</span>;
+                        const contentSpan = <span className="mail-message-content text-start">{msg.contenido}</span>;
                         return (
                           <div key={msg.id} className="mail-message-card">
                             <div className={`mail-message-row ${isMine ? 'mail-message-mine' : ''}`}>
@@ -549,8 +557,11 @@ export function BandejaPage() {
                               </div>
 
                               <div className={`mail-message-bubble ${isMine ? 'mail-message-mine-bubble' : 'mail-message-theirs-bubble'}`}>
-                                <span className="small text-muted flex-shrink-0">{formatMailDate(msg.fechaEnvio)}</span>
-                                <span className="mail-message-content text-start">{msg.contenido}</span>
+                                {isMine ? (
+                                  <>{dateSpan}{contentSpan}</>
+                                ) : (
+                                  <>{contentSpan}{dateSpan}</>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -576,7 +587,7 @@ export function BandejaPage() {
                         <div className="text-end">
                           <button
                             type="submit"
-                            className="btn cpq-navbar-btn cpq-navbar-btn-plain"
+                            className="btn mail-compose-btn"
                             disabled={submittingReply || !replyText.trim()}
                           >
                             {submittingReply ? (
