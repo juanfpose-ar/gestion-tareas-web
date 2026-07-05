@@ -72,11 +72,11 @@ export function EditUserModal({ usuario, onClose, onSaved }: Props) {
     <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content shadow">
-          <div className="modal-header bg-dark text-white">
+          <div className="modal-header bg-white text-dark">
             <h5 className="modal-title fw-bold d-flex align-items-center gap-2">
               <i className="bi bi-pencil-fill text-primary" /> Editar Usuario
             </h5>
-            <button className="btn-close btn-close-white" onClick={onClose} />
+            <button className="btn-close" onClick={onClose} />
           </div>
 
           <form onSubmit={handleSubmit} noValidate>
