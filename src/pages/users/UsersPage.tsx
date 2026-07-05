@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sidebar } from '../../components/layout/Sidebar';
+import { GlassNavbar } from '../../components/layout/GlassNavbar';
 import { CreateUserModal } from './modals/CreateUserModal';
 import { EditUserModal } from './modals/EditUserModal';
 import { BlanqueoPasswordModal } from './modals/BlanqueoPasswordModal';
@@ -107,19 +108,24 @@ export function UsersPage() {
       <Sidebar onSelectBoard={(id) => navigate(`/kanban/${id}`)} />
 
       <div className="cpq-content">
-        <div className="cpq-navbar d-flex justify-content-between align-items-center">
-          <h5 className="fw-bold mb-0" style={{ color: 'var(--cpq-primary)' }}>
-            <i className="bi bi-people-fill me-2 text-primary" />Usuarios del Sistema
-          </h5>
+        <GlassNavbar
+          left={
+            <h4 className="fw-bold mb-0 d-flex align-items-center gap-2" style={{ color: 'var(--cpq-text-title)', fontSize: '1.35rem' }}>
+              <i className="bi bi-people-fill" style={{ color: '#3b82f6' }}></i>
+              Usuarios del Sistema
+            </h4>
+          }
+        >
           {isAdmin && (
             <button
-              className="btn btn-primary btn-sm d-flex align-items-center gap-1"
+              className="btn cpq-navbar-btn"
               onClick={() => setShowCreate(true)}
             >
-              <i className="bi bi-person-plus-fill" /> Crear Usuario
+              <i className="bi bi-person-plus-fill fs-5" />
+              <span>Crear Usuario</span>
             </button>
           )}
-        </div>
+        </GlassNavbar>
 
         <div className="flex-grow-1 overflow-auto p-4">
           {loading ? (

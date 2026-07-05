@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Sidebar } from '../../components/layout/Sidebar';
+import { GlassNavbar } from '../../components/layout/GlassNavbar';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { userService } from '../../services/userService';
@@ -352,42 +353,47 @@ export function BandejaPage() {
       {/* Main Container */}
       <div className="cpq-content">
         {/* Sub-navbar */}
-        <div className="cpq-navbar d-flex align-items-center justify-content-between mb-3 flex-shrink-0">
-          {/* Search Input — centrado */}
-          <div className="flex-grow-1 d-flex justify-content-center">
-            <div className="position-relative" style={{ width: '360px' }}>
-              <input
-                type="text"
-                className="form-control form-control-sm ps-4"
-                placeholder="Buscar en el correo..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted small"></i>
-              {searchQuery && (
-                <button
-                  className="btn btn-link btn-sm position-absolute top-50 end-0 translate-middle-y text-muted me-1 p-0"
-                  onClick={() => setSearchQuery('')}
-                  type="button"
-                >
-                  <i className="bi bi-x-circle-fill"></i>
-                </button>
-              )}
-            </div>
+        <GlassNavbar
+          left={
+            <h4 className="fw-bold mb-0 d-flex align-items-center gap-2" style={{ color: 'var(--cpq-text-title)', fontSize: '1.35rem' }}>
+              <i className="bi bi-envelope-fill" style={{ color: '#3b82f6' }}></i>
+              Bandeja de Entrada
+            </h4>
+          }
+        >
+          {/* Search Input */}
+          <div className="position-relative" style={{ width: '300px' }}>
+            <input
+              type="text"
+              className="form-control form-control-sm ps-4"
+              placeholder="Buscar en el correo..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted small"></i>
+            {searchQuery && (
+              <button
+                className="btn btn-link btn-sm position-absolute top-50 end-0 translate-middle-y text-muted me-1 p-0"
+                onClick={() => setSearchQuery('')}
+                type="button"
+              >
+                <i className="bi bi-x-circle-fill"></i>
+              </button>
+            )}
           </div>
 
           {/* Refresh Button */}
           <button
-            className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
+            className="btn cpq-navbar-btn"
             onClick={() => fetchBandeja(true)}
             title="Actualizar bandeja de entrada"
             disabled={refreshing}
             type="button"
           >
-            <i className={`bi bi-arrow-clockwise ${refreshing ? 'spin' : ''}`}></i>
-            <span className="d-none d-md-inline">Refrescar</span>
+            <i className={`bi bi-arrow-clockwise fs-5 ${refreshing ? 'spin' : ''}`}></i>
+            <span>Refrescar</span>
           </button>
-        </div>
+        </GlassNavbar>
 
         {/* Mail Area split in Sub-Sidebar and Content */}
         <div className="mail-container flex-grow-1">
