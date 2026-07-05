@@ -253,11 +253,11 @@ export function ConfiguracionModal({ onClose, onRefresh }: Props) {
       <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}>
         <div className="modal-dialog modal-xl modal-dialog-scrollable">
           <div className="modal-content shadow-lg">
-            <div className="modal-header bg-dark text-white">
+            <div className="modal-header bg-white text-dark">
               <h5 className="modal-title fw-bold d-flex align-items-center gap-2">
-                <i className="bi bi-gear-fill text-primary"></i> Configuración
+                <i className="bi bi-gear-fill text-secondary"></i> Configuración
               </h5>
-              <button className="btn-close btn-close-white" onClick={onClose} />
+              <button className="btn-close" onClick={onClose} />
             </div>
 
             <div className="modal-body p-0">
